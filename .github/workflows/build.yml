@@ -1,0 +1,57 @@
+name: 打包无签名IPA
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-13
+    steps:
+      - name: 下载代码
+        uses: actions/checkout@v4
+
+      - name: 安装Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: 安装Capacitor
+        run: npm install
+
+      - name: 初始化iOS项目
+        run: |
+          npx cap add ios
+          npx cap sync
+
+      - name: 安装依赖
+        run: |
+          cd ios/App
+          pod install
+
+      - name: 编译App
+        run: |
+          xcodebuild build \
+            -scheme App \
+            -workspace ios/App/App.xcworkspace \
+            -configuration Release \
+            -derivedDataPath build \
+            -sdk iphoneos \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_ENTITLEMENTS=""
+
+      - name: 打包成IPA
+        run: |
+          mkdir -p output/Payload
+          cp -R build/Build/Products/Release-iphoneos/App.app output/Payload/
+          cd output
+          zip -r 库存管理.ipa Payload
+
+      - name: 上传IPA
+        uses: actions/upload-artifact@v4
+        with:
+          name: 库存管理-无签名.ipa
+          path: output/库存管理.ipa

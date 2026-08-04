@@ -1,0 +1,9 @@
+{
+  "appId": "com.stock.app",
+  "appName": "库存管理",
+  "webDir": "www",
+  "ios": {
+    "contentInset": "always",
+    "scrollEnabled": false
+  }
+}

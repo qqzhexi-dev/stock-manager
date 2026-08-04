@@ -1,0 +1,12 @@
+{
+  "name": "stock-app",
+  "version": "1.0.0",
+  "description": "库存管理",
+  "devDependencies": {
+    "@capacitor/cli": "^5.7.4"
+  },
+  "dependencies": {
+    "@capacitor/core": "^5.7.4",
+    "@capacitor/ios": "^5.7.4"
+  }
+}
